@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./AddFirm.css";
 import { API_URL } from "../../../apiPath/apiPath";
@@ -16,16 +16,16 @@ const AddFirm = () => {
 
   // ✅ Initial Loading Spinner
   useEffect(() => {
-    const timer = setTimeout(() => setIsLoading(false), 1000);
-    return () => clearTimeout(timer);
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 1000);
   }, []);
 
-  // ✅ Optimized Checkbox Handling
-  const handleCheckboxChange = useCallback((value, setState) => {
+  const handleCheckboxChange = (value, setState) => {
     setState((prev) =>
       prev.includes(value) ? prev.filter((item) => item !== value) : [...prev, value]
     );
-  }, []);
+  };
 
   const handleImageUpload = (event) => {
     setFile(event.target.files[0]);
@@ -48,11 +48,7 @@ const AddFirm = () => {
       formData.append("firmName", firmName);
       formData.append("address", address);
       formData.append("offer", offer);
-
-      if (file) {
-        formData.append("image", file); // ✅ Prevents empty file upload
-      }
-
+      formData.append("image", file);
       category.forEach((value) => formData.append("category", value));
       region.forEach((value) => formData.append("region", value));
 
@@ -70,8 +66,11 @@ const AddFirm = () => {
         localStorage.setItem("firmId", data.firmId);
         localStorage.setItem("firmName", data.vendorFirmName);
 
-        // ✅ Redirect **without reload**
-        navigate("/home");
+        // ✅ Automatically Redirect to Home After 1 Second
+        setTimeout(() => {
+          navigate("/home");
+          window.location.reload(); // ✅ Refresh the page
+        }, 1000);
       } else if (data.message === "vendor can have only one firm") {
         alert("Firm Exists 🥗. Only 1 firm can be added.");
       } else {

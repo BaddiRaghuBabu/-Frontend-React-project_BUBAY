@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import {Link, useNavigate } from "react-router-dom";
 import "./login.css";
 import { API_URL } from "../../../apiPath/apiPath";
 
@@ -13,7 +13,6 @@ const Login = ({ setIsAuthenticated }) => {
 
   const navigate = useNavigate();
 
-  // ✅ Clear error/success messages after 2 seconds
   useEffect(() => {
     if (error || success) {
       const timer = setTimeout(() => {
@@ -24,13 +23,11 @@ const Login = ({ setIsAuthenticated }) => {
     }
   }, [error, success]);
 
-  // ✅ Handle Login Submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
     setSuccess("");
     setLoading(true);
-    setShowSpinner(true); // ✅ Show loading spinner when submitting
 
     try {
       const response = await fetch(`${API_URL}/vendor/login`, {
@@ -47,11 +44,10 @@ const Login = ({ setIsAuthenticated }) => {
         setPassword("");
         setSuccess(data.message || "Vendor logged in successfully ✅");
 
-        // ✅ Save login token
+        // Save login token
         localStorage.setItem("loginToken", data.token);
-        setIsAuthenticated(true);
+        setIsAuthenticated(true); // ✅ Update authentication state
 
-        // ✅ Fetch vendor details
         if (data.vendorId) {
           console.log("Fetching vendor details for ID:", data.vendorId);
           const vendorResponse = await fetch(`${API_URL}/vendor/single-vendor/${data.vendorId}`);
@@ -63,19 +59,18 @@ const Login = ({ setIsAuthenticated }) => {
           }
         }
 
-        // ✅ Show loading spinner for EXACTLY 1.5 seconds before redirecting
+        // Redirect to Home after showing spinner
+        setShowSpinner(true);
         setTimeout(() => {
           setShowSpinner(false);
           navigate("/home");
         }, 1500);
       } else {
-        setError(data.message || "Invalid username or password ");
-        setShowSpinner(false); // Hide spinner if login fails
+        setError(data.message || "Invalid username or password ❌");
       }
     } catch (error) {
       console.error("Login Error:", error);
-      setError("Internal server error. Please try again ");
-      setShowSpinner(false); // Hide spinner on error
+      setError("Internal server error. Please try again ❌");
     } finally {
       setLoading(false);
     }
@@ -83,14 +78,11 @@ const Login = ({ setIsAuthenticated }) => {
 
   return (
     <div className="body-login">
-      {/* ✅ Show full-screen loading spinner only when logging in */}
       {showSpinner && (
         <div className="loading-overlay">
           <div className="spinner"></div>
         </div>
       )}
-
-      {/* ✅ Blur login form when spinner is visible */}
       <div className={`login-container ${showSpinner ? "blurred" : ""}`}>
         <h2>Vendor Login</h2>
         <form onSubmit={handleSubmit}>
@@ -120,11 +112,8 @@ const Login = ({ setIsAuthenticated }) => {
           </button>
         </form>
         <p className="auth-text">
-          Don't have an account?{" "}
-          <Link to="/register" className="auth-link">
-            Register
-          </Link>
-        </p>
+      Don't have an account? <Link to="/register" className="auth-link">Register</Link>
+    </p>
       </div>
     </div>
   );
