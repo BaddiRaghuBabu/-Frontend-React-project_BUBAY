@@ -1,0 +1,142 @@
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+/* Navbar Base */
+.navbar {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  height: 70px;
+  background: rgba(19, 18, 18, 0.1);
+  backdrop-filter: blur(5px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.6s ease, opacity 0.5s ease;
+  z-index: 1000;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Smooth Hide on Scroll Down */
+.nav-hidden {
+  transform: translateY(-100%);
+  opacity: 0;
+}
+
+/* Smooth Show on Scroll Up */
+.nav-visible {
+  transform: translateY(0);
+  opacity: 2;
+}
+
+/* Navbar Content */
+.nav-container {
+  width: 90%;
+  max-width: 1200px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 10px;
+}
+
+/* Logo */
+.nav-logo {
+  font-size: 22px;
+  font-weight: bold;
+  color: #ffcc00;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.nav-logo:hover {
+  color: #cccccb;
+}
+
+/* Restaurant Name */
+.firm-name {
+  font-size: 16px;
+  font-weight: 500;
+  color: rgb(29, 25, 25);
+}
+
+/* Logout Button */
+.logout-btn {
+  padding: 10px 18px;
+  width: 100px;
+  height: 40px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.auth-links{
+  display: flex;
+}
+.nav-link{
+ text-decoration: none;
+ margin-top: 10px;
+  width: 100px;
+  height: 40px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  color: #fad0a7;
+  text-decoration: none;
+  transition: color 0.8s ease;
+}
+.nav-link:hover{
+  color: black;
+}
+/* Full-screen overlay when logging out */
+.loading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5); /* Dark semi-transparent background */
+  backdrop-filter: blur(5px); /* Blurred background effect */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+/* Spinner animation */
+.loading-spinner {
+  width: 60px;
+  height: 60px;
+  border: 6px solid rgba(255, 255, 255, 0.3);
+  border-top: 6px solid #ff6b6b; /* Spinner color */
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+/* Rotation animation */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+
+
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .nav-container {
+    flex-direction: column;
+    text-align: center;
+    padding: 10px 0;
+  }
+
+  .firm-name {
+    margin-top: 5px;
+  }
+}
