@@ -131,12 +131,21 @@
 /* Mobile Responsive */
 @media (max-width: 768px) {
   .nav-container {
-    flex-direction: column;
-    text-align: center;
-    padding: 10px 0;
+ 
+  }
+  .nav-logo{
+    display: none;
   }
 
   .firm-name {
     margin-top: 5px;
+    color: rgb(190, 196, 193);
+    font-weight: bold;
+  }
+  .logout-btn{
+    width: 70px;
+    height: 30px;
+    font-size: 12px;
+
   }
 }
