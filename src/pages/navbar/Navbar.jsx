@@ -7,19 +7,7 @@ const Navbar = () => {
   const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("loginToken"));
   const [firmName, setFirmName] = useState(localStorage.getItem("firmName") || "");
-  const [isLoggingOut, setIsLoggingOut] = useState(false); // Show spinner
-
-  // ✅ Smooth Initial Refresh (Only Once)
-  useEffect(() => {
-    const hasRefreshed = sessionStorage.getItem("loginRefreshed");
-
-    if (!hasRefreshed) {
-      sessionStorage.setItem("loginRefreshed", "true");
-      setTimeout(() => {
-        window.location.reload();
-      }, 2000); // ✅ Wait 2 sec before reloading (smooth transition)
-    }
-  }, []);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   // ✅ Auto-Update Login Status When Storage Changes
   useEffect(() => {
@@ -44,19 +32,16 @@ const Navbar = () => {
       cancelButtonText: "Cancel",
     }).then((result) => {
       if (result.isConfirmed) {
-        setIsLoggingOut(true); // Show spinner
+        setIsLoggingOut(true);
 
         setTimeout(() => {
-          localStorage.clear(); // ✅ Clears all login-related data
+          localStorage.removeItem("loginToken");
+          localStorage.removeItem("firmName");
           setIsLoggedIn(false);
           setFirmName("");
-          setIsLoggingOut(false); // Hide spinner
+          setIsLoggingOut(false);
           navigate("/login");
-
-          setTimeout(() => {
-            window.location.reload(); // ✅ Smooth refresh after logout
-          }, 500); // 0.5 sec delay for smooth transition
-        }, 1000); // 1-second delay for smoother logout experience
+        }, 1000);
       }
     });
   };
@@ -66,27 +51,17 @@ const Navbar = () => {
       <div className="nav-container">
         <Link to="/home" className="nav-logo">🍽️ Vendor Portal</Link>
 
-            {isLoggedIn && (
-      <span className="firm-name">
-        Restaurant:{" "}
-        {firmName ? (
-          firmName
-        ) : (
-          <>
-            Not Updated Firm{" "}
-            <Link to="/home" onClick={() => setTimeout(() => window.location.reload(), 500)}>
-              Refresh
-            </Link>
-          </>
-        )}
-      </span>
+        {isLoggedIn && (
+          <span className="firm-name">
+            Restaurant: {firmName ? firmName : "Not Updated"}
+          </span>
         )}
 
         {isLoggedIn ? (
           isLoggingOut ? (
             <div className="loading-overlay">
               <div className="loading-spinner"></div>
-            </div> // Show loading animation
+            </div>
           ) : (
             <button className="logout-btn" onClick={handleLogout}>Logout</button>
           )

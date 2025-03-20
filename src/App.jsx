@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { HashRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import Login from "./pages/login/Login";
 import Register from "./pages/register/Register";
 import Sidebar from "./pages/sidebar/Sidebar";
@@ -11,11 +11,13 @@ import Navbar from "./pages/navbar/Navbar";
 import NotFound from "./pages/notfound/NotFound";
 
 const App = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem("loginToken");
-    setIsAuthenticated(!!token);
+    if (token) {
+      setIsAuthenticated(true);
+    }
   }, []);
 
   const handleLogout = () => {
@@ -23,15 +25,11 @@ const App = () => {
     setIsAuthenticated(false);
   };
 
-  if (isAuthenticated === null) {
-    return <div>Loading...</div>;
-  }
-
   return (
     <Router>
       {isAuthenticated && (
         <>
-          <Navbar handleLogout={handleLogout} /> {/* ✅ Pass function to Navbar */}
+          <Navbar handleLogout={handleLogout} />
           <Sidebar />
         </>
       )}
@@ -52,7 +50,6 @@ const App = () => {
             <Route path="*" element={<NotFound />} />
           </>
         )}
-
       </Routes>
     </Router>
   );

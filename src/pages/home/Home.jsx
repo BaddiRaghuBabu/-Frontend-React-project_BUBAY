@@ -1,43 +1,34 @@
 import React, { useEffect, useState } from "react";
 import "./home.css";
-import Sidebar from "../sidebar/Sidebar"; // Import Sidebar
+import Sidebar from "../sidebar/Sidebar"; // ✅ Import Sidebar
 
 const Home = () => {
   const [loading, setLoading] = useState(true);
-  const [initialLoading, setInitialLoading] = useState(true);
 
   useEffect(() => {
-    // ✅ Show spinner for smooth transition
+    // ✅ Remove automatic refresh (Fix Vercel issue)
     setTimeout(() => {
-      setInitialLoading(false);
+      setLoading(false);
     }, 1000);
-
-    // ✅ Refresh page only once per session
-    if (!sessionStorage.getItem("hasRefreshed")) {
-      sessionStorage.setItem("hasRefreshed", "true");
-      setTimeout(() => {
-        window.location.reload();
-      }, 2000); // Reload after 2s
-    } else {
-      setLoading(false); // ✅ Stop loading after first visit
-    }
   }, []);
 
   return (
     <div className="home-wrapper">
-      {/* ✅ Initial loading spinner */}
-      {initialLoading && (
+      {/* ✅ Show loading screen only initially */}
+      {loading && (
         <div className="loading-overlay">
           <div className="spinner"></div>
           <p>Loading... Please wait.</p>
         </div>
       )}
 
-      <Sidebar /> {/* ✅ Sidebar always present */}
-
-      <div className={`home-content ${loading ? "blurred" : ""}`}>
-        <h2>Welcome to Vendor Food</h2>
-        <p>Thank you for visiting my page.</p>
+      {/* ✅ Sidebar & Main Content */}
+      <div className="home-container">
+        <Sidebar />
+        <div className={`home-content ${loading ? "blurred" : ""}`}>
+          <h2>Welcome to Vendor Food</h2>
+          <p>Thank you for visiting my page.</p>
+        </div>
       </div>
     </div>
   );
