@@ -7,7 +7,19 @@ const Navbar = () => {
   const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("loginToken"));
   const [firmName, setFirmName] = useState(localStorage.getItem("firmName") || "");
-  const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false); // Show spinner
+
+  // ✅ Smooth Initial Refresh (Only Once)
+  useEffect(() => {
+    const hasRefreshed = sessionStorage.getItem("loginRefreshed");
+
+    if (!hasRefreshed) {
+      sessionStorage.setItem("loginRefreshed", "true");
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000); // ✅ Wait 2 sec before reloading (smooth transition)
+    }
+  }, []);
 
   // ✅ Auto-Update Login Status When Storage Changes
   useEffect(() => {
@@ -32,16 +44,19 @@ const Navbar = () => {
       cancelButtonText: "Cancel",
     }).then((result) => {
       if (result.isConfirmed) {
-        setIsLoggingOut(true);
+        setIsLoggingOut(true); // Show spinner
 
         setTimeout(() => {
-          localStorage.removeItem("loginToken");
-          localStorage.removeItem("firmName");
+          localStorage.clear(); // ✅ Clears all login-related data
           setIsLoggedIn(false);
           setFirmName("");
-          setIsLoggingOut(false);
+          setIsLoggingOut(false); // Hide spinner
           navigate("/login");
-        }, 1000);
+
+          setTimeout(() => {
+            window.location.reload(); // ✅ Smooth refresh after logout
+          }, 500); // 0.5 sec delay for smooth transition
+        }, 1000); // 1-second delay for smoother logout experience
       }
     });
   };
@@ -53,7 +68,14 @@ const Navbar = () => {
 
         {isLoggedIn && (
           <span className="firm-name">
-            Restaurant: {firmName ? firmName : "Not Updated"}
+            Restaurant:{" "}
+            {firmName ? (
+              firmName
+            ) : (
+              <Link to="/home" onClick={() => setTimeout(() => window.location.reload(), 500)}>
+                Refresh
+              </Link>
+            )}
           </span>
         )}
 
@@ -61,7 +83,7 @@ const Navbar = () => {
           isLoggingOut ? (
             <div className="loading-overlay">
               <div className="loading-spinner"></div>
-            </div>
+            </div> // Show loading animation
           ) : (
             <button className="logout-btn" onClick={handleLogout}>Logout</button>
           )
